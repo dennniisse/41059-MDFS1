@@ -23,19 +23,19 @@ int in4 = 8;
 
 //motor needs an interrupt pin (these are pin 2 and 3 on uno boards, their interrupt numbers are respectively 0,1)
 const byte encoder0pinA = 2;
-const byte encoder0pinB = 4;
+const byte encoder0pinB = 5;
 byte encoder0PinALast;
 int duration;
 boolean Direction;
 
 void setup()
 {
-  pinMode(enA, OUTPUT);
-  pinMode(enB, OUTPUT);
-  pinMode(in1, OUTPUT);
-  pinMode(in2, OUTPUT);
-  pinMode(in3, OUTPUT);
-  pinMode(in4, OUTPUT);
+//  pinMode(enA, OUTPUT);
+//  pinMode(enB, OUTPUT);
+//  pinMode(in1, OUTPUT);
+//  pinMode(in2, OUTPUT);
+//  pinMode(in3, OUTPUT);
+//  pinMode(in4, OUTPUT);
   //To read encoder, serial port needs to be at 57600 baud 
   Serial.begin(57600);
   EncoderInit();
@@ -43,7 +43,7 @@ void setup()
 
 void loop()
 {
-  run_motor(1);
+//  run_motor('f');
   Serial.print("Pulse: ");
   Serial.println(duration);
   duration = 0;
@@ -89,13 +89,32 @@ void wheelSpeed()
 
 }
 
-void run_motor(int state) //high = 1, low = 0
+void run_motor(char state) //high = 1, low = 0
 {  
-  //Motors are turned on
-  digitalWrite(in1, state);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, state);
-  digitalWrite(in4, LOW);
+  switch(state){
+    case 'f':{
+      digitalWrite(in1, LOW);
+      digitalWrite(in2, HIGH);
+      digitalWrite(in3, LOW);
+      digitalWrite(in4, HIGH);
+      break;
+    }
+    
+    case 'b':{
+      digitalWrite(in1, HIGH);
+      digitalWrite(in2, LOW);
+      digitalWrite(in3, HIGH);
+      digitalWrite(in4, LOW);
+      break;
+    }
+    case 's':{
+      digitalWrite(in1, LOW);
+      digitalWrite(in2, LOW);
+      digitalWrite(in3, LOW);
+      digitalWrite(in4, LOW);
+      break;      
+    }    
+  }
 
   //set speed
   analogWrite(enA, motor_duty_cycle);

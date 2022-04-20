@@ -17,29 +17,21 @@
 #define motor_duty_cycle 40
 //variables for motor state
 
-int ON = 1;
-int OFF = 0; 
-//Lowest to speed 100 
-//Motor A
-int enA = 9;
-int in1= 8;
-int in2 = 7;
+//Motor 1 (LHS)
+const int E1 = 3;     //speed control
+const int M1 = 4;     //direction, 0 = forward
 
-//Motor B
-int enB = 3;
-int in3 = 4;
-int in4 = 5;
-
+//Motor 2 (RHS)
+const int E2 = 11;
+const int M2 = 12;    //direction, 1 = forward
 
 
 void setup() {
   //Set motor pins as output, do not need to read from it
-  pinMode(enA, OUTPUT);
-  pinMode(enB, OUTPUT);
-  pinMode(in1, OUTPUT);
-  pinMode(in2, OUTPUT);
-  pinMode(in3, OUTPUT);
-  pinMode(in4, OUTPUT);
+  pinMode(E1, OUTPUT);
+  pinMode(M1, OUTPUT);
+  pinMode(E2, OUTPUT);
+  pinMode(M2, OUTPUT);
 
   Serial.begin(9600);  
 
@@ -54,14 +46,13 @@ void setup() {
 void run_motor(int state) //high = 1, low = 0
 {  
   //Motors are turned on
-  digitalWrite(in1, state);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, state);
-  digitalWrite(in4, LOW);
+  digitalWrite(M1, HIGH);
+  digitalWrite(M2, HIGH);
+  
 
   //set speed
-  analogWrite(enA, motor_duty_cycle);
-  analogWrite(enB, motor_duty_cycle);
+  analogWrite(E1, motor_duty_cycle);
+  analogWrite(E2, motor_duty_cycle);
   
 }
 
