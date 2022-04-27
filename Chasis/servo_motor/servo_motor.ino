@@ -1,6 +1,6 @@
 #include <Servo.h>
 Servo servo1;
-int servoPin = 9;
+int servoPin = 7;
 
 void setup(){
   servo1.attach(servoPin);
@@ -13,4 +13,5 @@ void loop(){
   delay(1000);
   servo1.write(180);
   delay(1000);
+  //servo1.stop(); 
 }
