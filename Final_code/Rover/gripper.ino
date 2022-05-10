@@ -16,3 +16,17 @@ void moveGripperVert(bool& servo_flag){
   servo_flag = true;
   }
 }
+
+void detectPayLoad(void){
+//  LDR1_val = analogue.read(LDR1);
+//  LDR2_val = analog.read(LDR2);
+
+  if(LDR1_val < 500)
+  {
+    // Do Something
+      if(LDR2_val < 500)
+      {
+        
+      }
+  }
+}

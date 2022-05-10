@@ -1,4 +1,4 @@
-/* PINS
+/* DIGITAL PINS
  *  1
  *  2 Interrupt encoder
  *  3 Interrupt encoder
@@ -12,6 +12,11 @@
  *  11 E1 LHSMotor1
  *  12 M1 LHSMotor1
  *  13
+*/
+
+/* ANALOGUE PINS
+ *  A0: LDR1
+ *  A1: LDR2
 */
 
 #include <Servo.h>
@@ -28,6 +33,13 @@ const int M1 = 12;
 const int E2 = 5;
 const int M2 = 8;
 
+//LDR Sensors
+#define LDR1 A0
+#define LDR2 A1
+
+int LDR1_val;
+int LDR2_val;
+
 //encoder
 
 //limit switch
@@ -38,9 +50,11 @@ void setMotor(void);
 void runMotor(unsigned int speed);
 void setEncoder(void);
 void setUpGripper(void);
+void detectPayLoad(void);
 
 bool servo_flag = false;
-bool wheel_detection = false;
+bool slow_detection = false;
+bool stop_detection = false;
 
 int angle;
 
@@ -64,13 +78,20 @@ void loop() {
   runMotor(50);
 
   //rover drive to wheel
-  while(wheel_detection == false){  //while the trip wire has not been triggered
+  while(slow_detection == false){  //while the trip wire has not been triggered
     //keep polling for change in the trip wire 
     //do nothing but poll
   }  
   myDelay(100);
-  runMotor(0);  //if trip wire has been triggered, the program will leave the while loop and hence we stop the motor by setting speed to 0
+  runMotor(10);  //if trip wire has been triggered, the program will leave the while loop and hence we slow the motor down, prevents crashing into the wheel
 
+  while(stop_detection == false){
+    //poll for second trip wire 
+  }
+  myDelay(100);
+  runMotor(0); 
+
+  
   //rover pick up wheel
   
   //gripper move up so the wheel doesn't drag on the ground
