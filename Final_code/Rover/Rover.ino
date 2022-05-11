@@ -2,9 +2,9 @@
  *  1
  *  2 Interrupt encoder
  *  3 Interrupt encoder
- *  4 Encoder
+ *  4 Encoder LHS
  *  5 E2 RHSMotor2
- *  6 Encoder 
+ *  6 Encoder RHS
  *  7 hoizontalServo
  *  8 M2 RHSMotor2
  *  9 winch
@@ -20,18 +20,21 @@
 */
 
 #include <Servo.h>
+#include <PID_v1.h>
+
 Servo servo_gripper;
 const int winch = 9;
 const int verticalServo = 7;
 
+double m_speed;
 //drive_control
 //LHS Motor 1
-const int E1 = 11;
-const int M1 = 12;
+const int E1 = 3;
+const int M1 = 4;
 
 //RHS Motor 2
-const int E2 = 5;
-const int M2 = 8;
+const int E2 = 11;
+const int M2 = 12;
 
 //LDR Sensors
 #define LDR1 A0
@@ -40,9 +43,16 @@ const int M2 = 8;
 int LDR1_val;
 int LDR2_val;
 
-//encoder
+//encoder & PID
+const byte en1 = 2; //Int pin 0, LHS
+const byte en2 =3; //Int pin 3, RHS 
+
+//double val_output;  //Power suppleid to the motor PWM value 
+//double Kp = 0.6, Ki = 5, Kd = 0;
+//PID myPID(&abs_duration, &speed_output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
 //limit switch
+
 
 //functions
 void myDelay(unsigned long to_delay);
