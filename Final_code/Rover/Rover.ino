@@ -103,6 +103,7 @@ void loop() {
 
   
   //rover pick up wheel
+  moveGripperHorizontal(stop_detection);  //added in for kenny, this is not properly implemented 
   
   //gripper move up so the wheel doesn't drag on the ground
   moveGripperVert(servo_flag); 
