@@ -1,9 +1,5 @@
 void setUpGripper(void){
-  //angle = servo_gripper.read(); //this causes issues with the wheel motors, might be becuase it's not receiving any data 
-  servo_gripper.write(45);
-  myDelay(100);
-  servo_gripper.write(0); 
-  myDelay(100);
+  
   
 }
 
@@ -29,4 +25,15 @@ void detectPayLoad(void){
         
       }
   }
+}
+
+void testGripper(void){
+  int angle_gripper = servo_gripper.read();
+  //int angle_goal = angle_gripper - 15;
+  Serial.print("Gripper angle: ");
+  Serial.println(angle_gripper);
+  //Serial.print("Gripper goal: ");
+  //Serial.println(angle_goal);
+  
+  //servo_gripper.write(angle_goal);
 }

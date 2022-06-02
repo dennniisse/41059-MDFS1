@@ -1,16 +1,16 @@
 /* DIGITAL PINS
  *  1
- *  2 Interrupt encoder
- *  3 Interrupt encoder
- *  4 Encoder LHS
- *  5 E2 RHSMotor2
- *  6 Encoder RHS
- *  7 hoizontalServo
- *  8 M2 RHSMotor2
- *  9 winch
+ *  2 
+ *  3 
+ *  4
+ *  5 
+ *  6
+ *  7 
+ *  8 
+ *  9 
  *  10 
- *  11 E1 LHSMotor1
- *  12 M1 LHSMotor1
+ *  11 
+ *  12
  *  13
 */
 
@@ -20,12 +20,13 @@
 */
 
 #include <Servo.h>
-#include <PID_v1.h>
+//#include <PID_v1.h> //not currently used
 
 Servo servo_gripper;
-const int winch = 9;
-const int verticalServo = 7;
+const int horizontalServo = 8;
+const int verticalServoPin = 9;
 
+//variable for motor speed 
 double m_speed;
 //drive_control
 //LHS Motor 1
@@ -37,21 +38,11 @@ const int E2 = 11;
 const int M2 = 12;
 
 //LDR Sensors
-#define LDR1 A0
-#define LDR2 A1
+const int LDR1 = A0;
+const int LDR2 = A1;
 
 int LDR1_val;
 int LDR2_val;
-
-//encoder & PID
-const byte en1 = 2; //Int pin 0, LHS
-const byte en2 =3; //Int pin 3, RHS 
-
-//double val_output;  //Power suppleid to the motor PWM value 
-//double Kp = 0.6, Ki = 5, Kd = 0;
-//PID myPID(&abs_duration, &speed_output, &Setpoint, Kp, Ki, Kd, DIRECT);
-
-//limit switch
 
 
 //functions
@@ -62,20 +53,19 @@ void setEncoder(void);
 void setUpGripper(void);
 void detectPayLoad(void);
 
+//variable
 bool servo_flag = false;
 bool slow_detection = false;
 bool stop_detection = false;
 
-int angle;
-
 void setup() {
 
   setMotor();
-  servo_gripper.attach(verticalServo);
+  servo_gripper.attach(verticalServoPin);
   Serial.begin(9600); 
 
   //ensure gripper is at 0 degrees prior to starting 
-  setUpGripper(); 
+  setUpGripper();
        
 }
 
@@ -84,32 +74,73 @@ void loop() {
   unsigned long current_time = 0;
   unsigned long previous_time = millis();
 
-  //bring motor down to ground
-  runMotor(50);
+  bool flag = true;
 
-  //rover drive to wheel
-  while(slow_detection == false){  //while the trip wire has not been triggered
-    //keep polling for change in the trip wire 
-    //do nothing but poll
-  }  
-  myDelay(100);
-  runMotor(10);  //if trip wire has been triggered, the program will leave the while loop and hence we slow the motor down, prevents crashing into the wheel
+  testGripper();
 
-  while(stop_detection == false){
-    //poll for second trip wire 
+  while(flag == true){
+    
   }
-  myDelay(100);
-  runMotor(0); 
-
   
-  //rover pick up wheel
-  moveGripperHorizontal(stop_detection);  //added in for kenny, this is not properly implemented 
+  ///////////////////////////////////////////////////////////////WINCH AND ROVER TO GROUND////////////////////////////////////////////////////////////////////
+  //activate winch mmotor to drop rover down
+
+  //time delay to let rover drop down (tests and record how long it takes for rover to drop)
+
+  ///////////////////////////////////////////////////////////////DRIVE TO PAYLOAD////////////////////////////////////////////////////////////////////
+
+  //activate the motor wheels 
+  runMotor(20); //friction of ball bearings needs consideration, as it will affect the speed
+
+  ///////////////////////////////////////////////////////////////PICK UP PAYLOAD////////////////////////////////////////////////////////////////////
+
+  //constantly flag LDR sensor for any changes
+  //if there is a change with first LDR sensor 
+    //slow down
+
+  //second LDR sensor change
+    //stop
+
+  //activate DC(servo)motor to grip the payload => measure time to rotate DC motor 
+
+  //rotate the servo motor
+
+  //time delay to give rover time to secure paylaod
+
+  ///////////////////////////////////////////////////////////////RETURN TO ZIPLINE ROLLER////////////////////////////////////////////////////////////////////
+  //using the flag from LDR sensor, have zipline roller bring rover back
+
+  //time delay or use encoder
+
+  ///////////////////////////////////////////////////////////////MOVE TO DEPOSIT ZONE////////////////////////////////////////////////////////////////////
+  //active the DC motors on zipline roller
+
+  //time delay
+
+  ///////////////////////////////////////////////////////////////DELIVER PAYLOAD////////////////////////////////////////////////////////////////////
+  //activate DC motor winch to drop rover down (may not have to do test)
+
+  //activate DC(servo) gripper, reverse direction to open the gripper 
+
+  //time delay to let wheel drop
+
+  ///////////////////////////////////////////////////////////////RETURN TO START ZONE////////////////////////////////////////////////////////////////////
+  //active the DC motors on zipline roller 
+
+  //THE END//
   
-  //gripper move up so the wheel doesn't drag on the ground
-  moveGripperVert(servo_flag); 
-  myDelay(100);  
+}
 
-  //rover return to base: two choices do we want the roller winch to drag the rover back or does rover reverse back 
+void myDelay(int timeToWait){
+  int currentTime = 0;
+  int previousTime = millis();
 
-  //rover release wheel 
+  do{
+    currentTime = millis(); 
+    //do nothing
+  }while(currentTime - previousTime <= timeToWait);
+
+  currentTime = 0;
+  previousTime = 0;
+  
 }
