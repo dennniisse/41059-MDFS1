@@ -1,39 +1,79 @@
 void setUpGripper(void){
-  
-  
+  servo.write(70);      
 }
 
-void moveGripperVert(bool& servo_flag){
-  if(servo_flag == false ){
-  servo_gripper.write(0);
-  myDelay(1000);
-  servo_gripper.write(90);
-  myDelay(1000);
-  servo_flag = true;
-  }
-}
-
-void detectPayLoad(void){
-//  LDR1_val = analogue.read(LDR1);
-//  LDR2_val = analog.read(LDR2);
-
-  if(LDR1_val < 500)
+bool detectPayLoad(int LDR){  //this code checks if the LDR has gone below the threshold value
+  bool LDR_status = false;
+  
+  switch(LDR)
   {
-    // Do Something
-      if(LDR2_val < 500)
-      {
-        
+    case 1:
+    {
+      LDR1_val = analogRead(LDR1);  //reader LDR values 
+      if(LDR1_val < LDR_threshold){
+        LDR_status = true;                 
       }
+      else{
+        LDR_status = false;
+      }
+      break;          
+    }
+    case 2:
+    {
+      LDR2_val = analogRead(LDR2); 
+      if(LDR2_val < LDR_threshold){
+        LDR_status = true;                 
+      }
+      else{
+        LDR_status = false;
+      }   
+      break;   
+    }
   }
+  
+  return LDR_status; //it returns whether the wheel has been detected based on true or false statement
 }
 
-void testGripper(void){
-  int angle_gripper = servo_gripper.read();
-  //int angle_goal = angle_gripper - 15;
-  Serial.print("Gripper angle: ");
-  Serial.println(angle_gripper);
-  //Serial.print("Gripper goal: ");
-  //Serial.println(angle_goal);
+/*
+void securePayLoad(void){
+  int current_time = 0;
+  int previous_time = millis();
   
-  //servo_gripper.write(angle_goal);
+  if(secure_payload_bool == true)
+  {
+    while(current_time - previous_time < motor_delay)
+    {
+      current_time = millis();
+      digitalWrite(inA, HIGH);
+      digitalWrite(inB, LOW);       
+    }
+  }
+
+  myDelay(1500);
+
+  digitalWrite(inA, LOW);
+  digitalWrite(inB, LOW); 
+  delay(500);   
+
+}
+*/
+
+void servoLift(bool upDown){  //false = down, true = up
+  int current_angle = servo.read();
+  int move_angle = 15;
+  
+  switch(upDown)
+  {
+    case true:  //case up 
+    {
+      servo.write(current_angle - move_angle);
+      break;
+    }
+
+    case false:
+    {
+      servo.write(current_angle + move_angle);
+      break;
+    }
+  }
 }
