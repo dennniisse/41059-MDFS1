@@ -5,7 +5,7 @@ void setUpGripper(void){
 bool detectPayLoad(int LDR){  //this code checks if the LDR has gone below the threshold value
   bool LDR_status = false;
   
-  switch(LDR)
+  switch(LDR) //depending on input value it detects either LDR1 or LDR2 values 
   {
     case 1:
     {
@@ -58,22 +58,8 @@ void securePayLoad(void){
 }
 */
 
-void servoLift(bool upDown){  //false = down, true = up
+void servoLift(void){  //false = down, true = up
   int current_angle = servo.read();
-  int move_angle = 15;
   
-  switch(upDown)
-  {
-    case true:  //case up 
-    {
-      servo.write(current_angle - move_angle);
-      break;
-    }
-
-    case false:
-    {
-      servo.write(current_angle + move_angle);
-      break;
-    }
-  }
+  servo.write(50);
 }

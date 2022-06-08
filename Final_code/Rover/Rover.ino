@@ -41,6 +41,12 @@ const int verticalServoPin = 9;
 
 //variable for motor speed 
 double m_speed;
+/////////////////////////////////////////////////////////////////////////
+// MOTOR SPEED TO CHANGE
+int start_v = 30;
+int slow_v = 10;
+/////////////////////////////////////////////////////////////////////////
+
 //drive_control
 //LHS Motor 1
 const int E1 = 3;
@@ -81,17 +87,18 @@ bool stop_detection = false;
 void setup() {
 
   setMotor();
-  servo.attach(verticalServoPin);
+  servo.attach(9);
   Serial.begin(9600); 
 
   //ensure gripper is at 0 degrees prior to starting 
   setUpGripper();
-       
+
+  myDelay(3000);       
 }
 
 void loop() {
 
-  Serial.println("Code begin");
+  //Serial.println("Code begin");
   
   ///////////////////////////////////////////////////////////////WINCH AND ROVER TO GROUND////////////////////////////////////////////////////////////////////
   //activate winch mmotor to drop rover down
@@ -103,27 +110,28 @@ void loop() {
   //activate the motor wheels 
   if(wheel_bool == true)//friction of ball bearings needs consideration, as it will affect the speed
   {
-    runMotor(50);
-    Serial.println("Wheel move");
+    runMotor(start_v);
+    //Serial.println("Wheel move");
   }
   
   ///////////////////////////////////////////////////////////////PICK UP PAYLOAD////////////////////////////////////////////////////////////////////
   //constantly flag LDR sensor for any changes
-  Serial.println("Read LDR1");
+  //Serial.println("Read LDR1");
   while(ldr1_bool == false)
   {    
     //if there is a change with first LDR sensor 
     ldr1_bool = detectPayLoad(1);
     if(ldr1_bool == true) //safety function to ensure we exit the while loop if boolean value changes 
     {
-      runMotor(25);
+      runMotor(slow_v);
       break;
     }
     myDelay(100);       
   }
 
-  runMotor(25); //slow down
-  Serial.println("LDR2");
+  runMotor(slow_v); //slow down
+    
+  //Serial.println("LDR2");
   while(ldr2_bool == false)
   {
     ldr2_bool = detectPayLoad(2);
@@ -137,8 +145,8 @@ void loop() {
      myDelay(100);
   }
   
-  myDelay(1500);
-  Serial.println("Wheel stopped");
+  myDelay(2500);  //delay that allows the motor to move in a bit more before it stops, this is hardcoded, trial and error
+  //Serial.println("Wheel stopped");
  
   runMotor(0); //stop motor wheels
 
@@ -150,9 +158,9 @@ void loop() {
   //securePayLoad();
   
   //rotate the servo motor
-  myDelay(5000);
-  servoLift(lift_bool);
-
+  if(lift_bool == true){
+    servoLift();
+  }
   //time delay to give rover time to secure paylaod
 
   ///////////////////////////////////////////////////////////////RETURN TO ZIPLINE ROLLER////////////////////////////////////////////////////////////////////
@@ -176,6 +184,7 @@ void loop() {
   //active the DC motors on zipline roller 
 
   //THE END//
+  myDelay(6000);
   exit(0);    
 }
 
