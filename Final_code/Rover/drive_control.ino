@@ -5,10 +5,10 @@ void setMotor(void){
   pinMode(M2, OUTPUT);  
 
   //servo DC motor
-//  pinMode(inA, LOW);
-//  pinMode(inB, HIGH);
-//  digitalWrite(inA, LOW);
-//  digitalWrite(inB, LOW);
+  pinMode(inA, OUTPUT);
+  pinMode(inB, OUTPUT);
+  digitalWrite(inA, LOW);
+  digitalWrite(inB, LOW);
 }
 
 void runMotor(unsigned int m_speed){

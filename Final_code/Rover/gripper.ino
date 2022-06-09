@@ -1,5 +1,5 @@
 void setUpGripper(void){
-  servo.write(70);      
+  servo.write(170);      
 }
 
 bool detectPayLoad(int LDR){  //this code checks if the LDR has gone below the threshold value
@@ -34,32 +34,29 @@ bool detectPayLoad(int LDR){  //this code checks if the LDR has gone below the t
   return LDR_status; //it returns whether the wheel has been detected based on true or false statement
 }
 
-/*
-void securePayLoad(void){
-  int current_time = 0;
-  int previous_time = millis();
-  
-  if(secure_payload_bool == true)
+
+void securePayLoad(bool state){
+  switch(state)
   {
-    while(current_time - previous_time < motor_delay)
+    case true:  //release CCW
     {
-      current_time = millis();
       digitalWrite(inA, HIGH);
-      digitalWrite(inB, LOW);       
+      digitalWrite(inB, LOW);
+      break;
     }
+    case false: //close CW
+    {
+      digitalWrite(inA, LOW);
+      digitalWrite(inB, HIGH);
+      break;
+    }
+
   }
-
-  myDelay(1500);
-
-  digitalWrite(inA, LOW);
-  digitalWrite(inB, LOW); 
-  delay(500);   
-
 }
-*/
+
 
 void servoLift(void){  //false = down, true = up
   int current_angle = servo.read();
   
-  servo.write(50);
+  servo.write(140);
 }

@@ -16,7 +16,24 @@
 
 /* ANALOGUE PINS
  *  A0: LDR1
- *  A1: LDR2
+ *  A1: LDR2int current_time = 0;
+  int previous_time = millis();
+  
+  if(secure_payload_bool == true)
+  {
+    while(current_time - previous_time < motor_delay)
+    {
+      current_time = millis();
+      digitalWrite(inA, HIGH);
+      digitalWrite(inB, LOW);       
+    }
+  }
+
+  myDelay(1500);
+
+  digitalWrite(inA, LOW);
+  digitalWrite(inB, LOW); 
+  delay(500);   
 */
 
 #include <Servo.h>
@@ -24,7 +41,8 @@
 
 /////////////////////////////////////////////////////////////////////////
 // TIME VARIABLES TO CHANGE
-
+int lift_wait = 5000; //how long to wait before we lift
+int zipline_wait = 17000; //how long to wait before releasing gripper
 /////////////////////////////////////////////////////////////////////////
 
 //BOOLEAN values (SET ALL TO FALSE UNLESS TESTING) 
@@ -57,9 +75,9 @@ const int E2 = 11;
 const int M2 = 12;
 
 //servo DC Motor
-//const int inA = 10;
-//const int inB = 13;
-//int motor_delay = 1000;
+const int inA = A2;
+const int inB = A3;
+int motor_delay = 1000;
 
 //LDR Sensors
 const int LDR1 = A0;
@@ -93,17 +111,14 @@ void setup() {
   //ensure gripper is at 0 degrees prior to starting 
   setUpGripper();
 
-  myDelay(3000);       
 }
 
 void loop() {
 
-  //Serial.println("Code begin");
+  Serial.println("Code begin");
   
   ///////////////////////////////////////////////////////////////WINCH AND ROVER TO GROUND////////////////////////////////////////////////////////////////////
-  //activate winch mmotor to drop rover down
-
-  //time delay to let rover drop down (tests and record how long it takes for rover to drop)
+  
 
   ///////////////////////////////////////////////////////////////DRIVE TO PAYLOAD////////////////////////////////////////////////////////////////////
 
@@ -155,12 +170,22 @@ void loop() {
   lift_bool = true;
   
   //activate DC(servo)motor to grip the payload => measure time to rotate DC motor 
-  //securePayLoad();
-  
+  //securePayLoad(false);
+  digitalWrite(inA, HIGH);
+  digitalWrite(inB, LOW);
+
+  //Serial.println("LIFTING TIME");
+  myDelay(lift_wait);
   //rotate the servo motor
   if(lift_bool == true){
     servoLift();
   }
+
+  myDelay(zipline_wait);
+  
+  //securePayLoad(true);
+   digitalWrite(inA, LOW);
+   digitalWrite(inB, HIGH);
   //time delay to give rover time to secure paylaod
 
   ///////////////////////////////////////////////////////////////RETURN TO ZIPLINE ROLLER////////////////////////////////////////////////////////////////////
@@ -184,7 +209,7 @@ void loop() {
   //active the DC motors on zipline roller 
 
   //THE END//
-  myDelay(6000);
+  myDelay(5000);
   exit(0);    
 }
 

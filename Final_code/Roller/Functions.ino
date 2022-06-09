@@ -6,3 +6,7 @@ void myDelay(unsigned long int to_delay){
     //nothing
   }
 }
+
+void moveZipLine(void){
+  
+}
